@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{{title|default}}{% endblock title %}</title>
+
+    <link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">
+    <link href="{{bootstrap_find_resource('css/fontawesome-all.css', cdn='bootstrap')}}" rel="stylesheet">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{{ url_for('static' ,filename = 'scholar_ico.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static' ,filename = 'scholar_ico1.ico')}}" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+    {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    {%- endblock scripts %}
+
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a href="/"><img href="/" class="navbar-brand" width="50" height="50" src="{{ url_for('static' ,filename='logo.png') }}"></a>
+        <!--    Brand   -->
+<!--        <a class="navbar-brand" href="/"></a>-->
+        <!--  宣告這是一個可折疊的按鈕  -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <!-- links -->
+            <ul class="navbar-nav">
+                <!-- 下拉式選單 -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="/" id="navbardrop" data-toggle="dropdown"> 站外選單 </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="https://www.youtube.com/" target="_blank"> Youtube </a>
+                        <a class="dropdown-item" href="http://www.ezchain.net/" target="_blank"> ezchain網頁 </a>
+                        <a class="dropdown-item" href="https://google.com.tw/" target="_blank"> Google Search </a>
+                    </div>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+        <div class="jumbotron">
+        {% block page_content %}{% endblock %}
+        </div>
+    </div>
+
+
+</body>
+</html>

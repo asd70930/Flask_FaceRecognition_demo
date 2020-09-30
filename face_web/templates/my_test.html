@@ -1,0 +1,116 @@
+{% extends "mybase.html" %}
+{% block title %}New{% endblock %}
+
+
+{% block page_content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<section class="compare">
+  <h1 class="text-center">人臉比對辨識</h1>
+  <div>
+    <div class="row mt-3">
+      <form class="col-12">
+        <div class="col-12">
+          <div class="row d-flex justify-content-around">
+            <div class="divUpload">
+                <div class="uploadPreview" id="faceRectDiv"></div>
+                <div class="divFilePreview fileA" id="img1Preview" onclick="uploadImgA()"></div>
+                <img id="blsh1" src="static/A.png" width="300" height="300" alt="一張圖片">
+                <input class="fimg1" id="img1" type="file" accept="image/*" name="img1" title="" value="{{ url_for('static' ,filename='A.png') }}" >
+                <div class="divBtn">
+                  <button class="btn btn-block btn-compare" type="button" onclick="uploadImgA()">上傳圖片</button>
+                </div>
+            </div>
+            <div class="divUpload">
+                <div class="uploadPreview" id="faceRectDiv2"></div>
+                <div class="divFilePreview fileA" id="img2Preview" onclick="uploadImgA()"></div>
+                <img id="blsh2" src="static/B.png" width="300" height="300" alt="一張圖片">
+                <input class="fimg1" id="img2" type="file" accept="image/*" name="img2" title="" value="{{ url_for('static' ,filename='B.png') }}">
+                <div class="divBtn">
+                  <button class="btn btn-block btn-compare" type="button" onclick="uploadImgB()">上傳圖片</button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+        <div class="row d-flex justify-content-around">
+          <div class="divCompare">
+
+            <button onclick="lets_recognition()">點我啊</button>
+
+
+
+          </div>
+        </div>
+
+  </div>
+</section>
+
+
+<style>h1 {front-size:10px;}</style>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#blsh1').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+    $("#img1").change(function() {
+        readURL(this);
+    });
+    function readURL2(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#blsh2').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+    $("#img2").change(function() {
+        readURL2(this);
+    });
+
+    function lets_recognition(){
+        var XHR = new XMLHttpRequest();
+        imgs = {};
+        var aimg = document.getElementById("blsh1");
+        var bimg = document.getElementById("blsh2");
+        var aimgsrc = aimg.getAttribute("src");
+        var bimgsrc = bimg.getAttribute("src");
+        imgs["a"] = aimgsrc
+        imgs["b"] = bimgsrc
+        var pay_load = {"imgs": imgs};
+
+        // 配置请求
+        XHR.open('POST', 'face_recognition');
+        // HTTP头
+        XHR.setRequestHeader('content-type', 'application/json');  //先open再设置请求头
+        // 发送请求
+        XHR.send(JSON.stringify(pay_load));
+
+
+
+
+
+    }
+
+</script>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
