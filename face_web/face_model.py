@@ -73,21 +73,41 @@ class FaceModel:
     aligned = np.transpose(nimg, (2, 0, 1))
     return aligned
 
+  def get_input_loc(self, face_img):
+    ret = self.detector.detect_face(face_img, det_type=self.det)
+    if ret is None:
+      return None, None, None
+    bbox, points = ret
+    if bbox.shape[0] == 0:
+      return None, None, None
+    bbox = bbox[0, 0:4]
+    points = points[0, :].reshape((2, 5)).T
+    nimg, bb = face_preprocess.preprocess(face_img, bbox, points, image_size='112,112')
+    loc = face_img.copy()
+    cv2.rectangle(loc, (bb[0], bb[1]), (bb[2], bb[3]), (0, 0, 255), 2)
+
+    aligned = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
+    aligned = np.transpose(aligned, (2, 0, 1))
+    return aligned, nimg, loc
+
+
+
   def get_input(self, face_img):
     ret = self.detector.detect_face(face_img, det_type = self.det)
     if ret is None:
-      return None
+      return None, None
     bbox, points = ret
     if bbox.shape[0]==0:
-      return None
+      return None, None
     bbox = bbox[0,0:4]
     points = points[0,:].reshape((2,5)).T
     #print(bbox)
     #print(points)
-    nimg = face_preprocess.preprocess(face_img, bbox, points, image_size='112,112')
+    nimg, _ = face_preprocess.preprocess(face_img, bbox, points, image_size='112,112')
+
     aligned = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
     aligned = np.transpose(aligned, (2,0,1))
-    return aligned,nimg
+    return aligned, nimg
 
   def get_feature(self, aligned):
     input_blob = np.expand_dims(aligned, axis=0)

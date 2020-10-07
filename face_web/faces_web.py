@@ -7,14 +7,12 @@ from flask_moment import Moment
 from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField ,SubmitField
-import face_model
 import cv2
 import numpy as np
-
-
+# import he
 
 UPLOAD_FOLDER = 'static/uploads/'
-model = face_model.FaceModel(image_size='112,112', model='model,0')
+PREBASE64 = "data:image/jpeg;base64,"
 
 
 app = Flask(__name__)
@@ -22,6 +20,7 @@ app = Flask(__name__)
 # import secrets ; secrets.token_urlsafe(12)
 # 設置 flask的密鑰 方法一
 app.config['SECRET_KEY'] = '-XQRl_yWcNaqrVsm'
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 # 設置 flask的密鑰 方法二
 # app.secret_key = app.config.get('flask' ,'123321456789')
 print("secret key : ", app.secret_key)
@@ -38,8 +37,12 @@ class Up_img(FlaskForm):
     submit = SubmitField('上傳圖片')
 @app.route('/')
 def hello_world():
-    # return render_template('index.html', cur_time=datetime.utcnow())
-    return render_template('my_test.html')
+    imga = cv2.imread('static/A.png')
+    imgb = cv2.imread('static/B.png')
+    basea = cv2_strbase64(imga)
+    baseb = cv2_strbase64(imgb)
+
+    return render_template('my_test.html', basea=basea, baseb=baseb)
 
 
 @app.route('/face_recognition', methods=['POST'])
@@ -47,18 +50,18 @@ def Recognition_face():
     if request.method == "POST":
         # print('wow i get it')
         data = request.get_json()
-        print(data)
-        imga = data["imgs"]["a"].split(",")[1]
-        imab = data["imgs"]["b"].split(",")[1]
+
+        ans = he.recognition(data)
+
+        return ans
 
 
 
-        print()
-
-
-
-
-    return render_template('my_test.html')
+    imga = cv2.imread('static/A.png')
+    imgb = cv2.imread('static/B.png')
+    basea = cv2_strbase64(imga)
+    baseb = cv2_strbase64(imgb)
+    return render_template('my_test.html', basea=basea, baseb=baseb)
 
 
 
@@ -88,8 +91,19 @@ def base64toimg(string):
     except Exception as e:
         return None
 
-##################################################################
 
+def cv2_base64(image):
+    base64_str = cv2.imencode('.jpg',image)[1].tostring()
+    base64_str = base64.b64encode(base64_str)
+    return base64_str
+
+def cv2_strbase64(image):
+    base64_str = cv2.imencode('.jpg', image)[1].tostring()
+    base64_str = base64.b64encode(base64_str)
+    output = PREBASE64+str(base64_str).split("'")[1]
+    return output
+
+##################################################################
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -100,6 +114,6 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=False)
+    app.run(processes=True, threaded=False, port=5000, debug=True)
 
 

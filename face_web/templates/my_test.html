@@ -6,53 +6,69 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
+
 <section class="compare">
-  <h1 class="text-center">人臉比對辨識</h1>
+  <div class="row d-flex justify-content-around">
+    <span class="" style="font-size:32px;">人臉比對辨識</span>
+  </div>
+  <div class="row d-flex justify-content-around">
+    <span class="" style="font-size:16px;">*圖片檔案無法上傳大於2MB*</span>
+  </div>
   <div>
     <div class="row mt-3">
       <form class="col-12">
         <div class="col-12">
           <div class="row d-flex justify-content-around">
-            <div class="divUpload">
+            <div class="divUpload ">
                 <div class="uploadPreview" id="faceRectDiv"></div>
                 <div class="divFilePreview fileA" id="img1Preview" onclick="uploadImgA()"></div>
-                <img id="blsh1" src="static/A.png" width="300" height="300" alt="一張圖片">
-                <input class="fimg1" id="img1" type="file" accept="image/*" name="img1" title="" value="{{ url_for('static' ,filename='A.png') }}" >
+                <img id="blsh1" src="{{ basea }}" width="300" height="300" alt="一張圖片">
                 <div class="divBtn">
-                  <button class="btn btn-block btn-compare" type="button" onclick="uploadImgA()">上傳圖片</button>
                 </div>
             </div>
             <div class="divUpload">
                 <div class="uploadPreview" id="faceRectDiv2"></div>
                 <div class="divFilePreview fileA" id="img2Preview" onclick="uploadImgA()"></div>
-                <img id="blsh2" src="static/B.png" width="300" height="300" alt="一張圖片">
-                <input class="fimg1" id="img2" type="file" accept="image/*" name="img2" title="" value="{{ url_for('static' ,filename='B.png') }}">
+                <img id="blsh2" src="{{ baseb }}" width="300" height="300" alt="一張圖片">
                 <div class="divBtn">
-                  <button class="btn btn-block btn-compare" type="button" onclick="uploadImgB()">上傳圖片</button>
                 </div>
             </div>
+            <div id="processing" class="loader" style="display: none;"></div>
           </div>
         </div>
       </form>
     </div>
-
-        <div class="row d-flex justify-content-around">
-          <div class="divCompare">
-
-            <button onclick="lets_recognition()">點我啊</button>
-
-
-
-          </div>
+    <div class="row mt-2">
+        <div class="col-1"></div>
+        <div class="col-5 d-flex justify-content-around ml-4">
+            <input class="" id="img1" type="file" accept="image/*"   >
+<!--            <button type="button" class="btn btn-success btn-lg px-5" style="background-color: #00c3ab;" onclick="uploadImgA()">上傳圖片</button>-->
         </div>
-
+        <div class="col-5 d-flex justify-content-around ml-4">
+            <input class="" id="img2" type="file" accept="image/*"  >
+        </div>
+    </div>
+    <div class="row d-flex justify-content-around mx-5 my-3" style="">
+        <div class="col-4"></div>
+        <div class="col-4 d-flex justify-content-around">
+            <button type="button" class="btn btn-success btn-lg px-5" style="font-size:20px;background-color: #00c3ab;" onclick="lets_recognition()">開始辨識</button>
+        </div>
+        <div class="col-4"></div>
+    </div>
   </div>
 </section>
 
 
 <style>h1 {front-size:10px;}</style>
 <script>
+    var filesizeLimit = 6 * 1024 * 1024
+<!--    var filesizeLimit = 1024-->
     function readURL(input) {
+        if (input.files && input.files[0]){
+            if(filesizeLimit <= input.files[0].size) {alert("哭阿太大了");}
+        }
+
+
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function(e) {
@@ -84,22 +100,50 @@
         var bimg = document.getElementById("blsh2");
         var aimgsrc = aimg.getAttribute("src");
         var bimgsrc = bimg.getAttribute("src");
+        var process = document.getElementById("processing");
         imgs["a"] = aimgsrc
         imgs["b"] = bimgsrc
         var pay_load = {"imgs": imgs};
 
+        XHR.onreadystatechange = function(){
+            if(XHR.readyState == XMLHttpRequest.DONE){
+                var data=XHR.responseText;
+                var jsonResponse = JSON.parse(data);
+                var state = jsonResponse["state"]
+                aimg.setAttribute("src", jsonResponse["basea"]);
+                bimg.setAttribute("src", jsonResponse["baseb"]);
+                process.setAttribute("style","display:none;");
+                var ans = jsonResponse["ans"]
+                switch (state) {
+                    case 3:
+                        if (ans){alert("這是同一個人");}
+                        else{alert("這是不同的人");}
+                        break;
+                    case 1:
+                        alert("A圖片中找不到人臉");
+                        break;
+                    case 2:
+                        alert("B圖片中找不到人臉");
+                        break;
+                    case 0:
+                        alert("A,B圖片中找不到人臉");
+                        break;
+                    default:
+                        alert('something error');
+                        break;
+                }
+            }
+
+        }
         // 配置请求
-        XHR.open('POST', 'face_recognition');
+        XHR.open('POST', 'face_recognition',true);
         // HTTP头
         XHR.setRequestHeader('content-type', 'application/json');  //先open再设置请求头
         // 发送请求
         XHR.send(JSON.stringify(pay_load));
 
-
-
-
-
     }
+
 
 </script>
 
