@@ -1,0 +1,36 @@
+{% extends "mybase.html" %}
+
+{% block title %}Home{% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+        {{ moment.include_moment() }}
+        {{ moment.locale('zh-tw') }}
+    {% endblock %}
+
+    {% block page_content %}
+
+
+        {% block main %}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class = 'alert alert-success'>
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+                <form  method="POST" action="{{  }}" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-group">
+                             <img id="pic" src="" style="width: 80px;"/>
+                        </div>
+                            <div class="form-group">
+                                <label for="intro_pic" class="col-sm-2">更换头像</label>
+                                <input type="file" accept="image/*" class="file" id="intro_pic" name="intro_pic">
+                        </div>
+                    </div>
+                </form>
+        {% endblock %}
+    {% endblock %}
