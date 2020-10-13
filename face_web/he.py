@@ -11,7 +11,6 @@ def recognition(data):
     ans = False
     basea = data["imgs"]["a"].split(",")[1]
     baseb = data["imgs"]["b"].split(",")[1]
-    print('data get!')
     imga = base64toimg(basea)
     imgb = base64toimg(baseb)
 

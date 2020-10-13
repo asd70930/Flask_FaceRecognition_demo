@@ -1,0 +1,100 @@
+{% extends "mybase.html" %}
+{% block title %}{% endblock %}
+{% block page_content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<style>
+.img-zone{
+    height: 250px; /*can be anything*/
+    position: relative;
+    background-color: rgba(116, 116, 116, 0.1);
+}
+img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.answer{
+    padding:5px 5px 5px 5px;
+}
+.my_select{
+    width:250px;
+}
+</style>
+
+<div class="container mt-1 backgroundGray">
+    <div class="row align-items-center">
+        <div class="col-4 ">
+            <div class="px-5 py-4 text-center">
+                <p style="font-size:18px;">上傳圖片至後端資料庫</p>
+                <label class="btn btn-primary">
+                        上傳圖片<input class="" hidden id="uploadimg1" type="file" accept="image/*">
+                </label>
+            </div>
+            <div class="px-5 pb-5 text-center">
+                <textarea class="form-control mb-3" id="textarea_getipc1" rows="1"></textarea>
+                <div class="btn btn-primary " onclick="show_camera">
+                        開啟攝影機
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="img-zone">
+                <img id="blsh1" src="{{ basea }}" height="200"  alt="一張圖片">
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row align-items-center text-center">
+        <div class="col-4 ">
+            <p style="font-size:18px;">顯示資料庫圖片</p>
+            <select class="my_select" name="cars" multiple size="10">
+                <option value="volvo">Volvo</option>
+                <option value="bmw">BMW</option>
+                <option value="saab">Saab</option>
+                <option value="benz">Benz</option>
+                <option value="audi">Audi</option>
+            </select>
+        </div>
+        <div class="col-8">
+            <div class="img-zone">
+                <img id="blsh2" src="{{ baseb }}" height="200"  alt="一張圖片">
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="row align-items-center">
+        <div class="col-4 ">
+            <div class="px-5 py-4 text-center">
+                <p style="font-size:18px;">開始比對</p>
+                <label class="btn btn-primary">
+                        上傳圖片<input class="" hidden id="uploadimg2" type="file" accept="image/*">
+                </label>
+            </div>
+            <div class="px-5 pb-5 text-center">
+                <textarea class="form-control mb-3" id="textarea_getipc2" rows="1"></textarea>
+                <div class="btn btn-primary " onclick="show_camera">
+                        開啟攝影機
+                </div>
+            </div>
+        </div>
+        <div class="col-8 ">
+            <div class="img-zone">
+                <img id="blsh3" src="{{ baseb }}" height="200"  alt="一張圖片">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

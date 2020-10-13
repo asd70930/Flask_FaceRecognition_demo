@@ -9,7 +9,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField ,SubmitField
 import cv2
 import numpy as np
-
+# import he
 
 UPLOAD_FOLDER = 'static/uploads/'
 PREBASE64 = "data:image/jpeg;base64,"
@@ -33,8 +33,6 @@ ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 
-class Up_img(FlaskForm):
-    submit = SubmitField('上傳圖片')
 @app.route('/')
 def hello_world():
     imga = cv2.imread('static/A.png')
@@ -43,6 +41,17 @@ def hello_world():
     baseb = cv2_strbase64(imgb)
 
     return render_template('my_test.html', basea=basea, baseb=baseb)
+
+@app.route('/white_black')
+def black_whitelist():
+    imga = cv2.imread('static/A.png')
+    imgb = cv2.imread('static/B.png')
+    basea = cv2_strbase64(imga)
+    baseb = cv2_strbase64(imgb)
+    return render_template('white_blacklist.html', baseb=baseb, basea=basea)
+
+
+
 
 
 @app.route('/face_recognition', methods=['POST'])
@@ -114,6 +123,6 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == "__main__":
-    app.run(processes=True, threaded=False, port=5000, debug=True)
+    app.run(processes=True, threaded=False, port=5000, debug=False)
 
 
