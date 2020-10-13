@@ -5,9 +5,7 @@ import cv2
 model = face_model.FaceModel(image_size='112,112', model='model,0')
 PREBASE64 = "data:image/jpeg;base64,"
 
-
 def recognition(data):
-    state = 0
     ans = False
     basea = data["imgs"]["a"].split(",")[1]
     baseb = data["imgs"]["b"].split(",")[1]
@@ -47,6 +45,33 @@ def recognition(data):
         ans = True
     return {"state": state, "basea": out_basea, "baseb": out_baseb, "ans": ans}
 
+def locate_face(data, filepath):
+    """
+
+    :param data:
+    :return:
+    state:0 , can't find face, do not save the image
+    state:1 , only one face in image, return image base64, and save image
+    state:2 , face more than 1, do not save the image
+    """
+    basea = data["imgs"]["a"].split(",")[1]
+    imga = base64toimg(basea)
+    filename = data["imgs"]["filename"]
+    loc, count = model.get_locate_count(imga)
+    print("find face %i" % count)
+    if count ==0:
+        # can't find face, do not save the image
+        out_base = cv2_strbase64(imga)
+        return {"state": 0, "base": out_base}
+    elif count == 1:
+        cv2.imwrite(filepath+'/'+filename+'.jpg', imga, [cv2.IMWRITE_JPEG_QUALITY, 90])
+        out_base = cv2_strbase64(loc)
+        return {"state": 1, "base": out_base}
+    else:
+        # face more than 1, do not save the image
+        out_base = cv2_strbase64(loc)
+        return {"state": 2, "base": out_base}
+
 def base64toimg(string):
     """
     base64 to np type image
@@ -69,7 +94,6 @@ def base64toimg(string):
             return img
     except Exception as e:
         return None
-
 
 def cv2_base64(image):
     base64_str = cv2.imencode('.jpg',image)[1].tostring()

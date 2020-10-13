@@ -9,10 +9,11 @@ from flask_wtf import FlaskForm
 from wtforms import StringField ,SubmitField
 import cv2
 import numpy as np
-# import he
+import he
 
-UPLOAD_FOLDER = 'static/uploads/'
+UPLOAD_FOLDER = 'static/face_test'
 PREBASE64 = "data:image/jpeg;base64,"
+
 
 
 app = Flask(__name__)
@@ -24,7 +25,6 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 # 設置 flask的密鑰 方法二
 # app.secret_key = app.config.get('flask' ,'123321456789')
 print("secret key : ", app.secret_key)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 
@@ -51,30 +51,24 @@ def black_whitelist():
     return render_template('white_blacklist.html', baseb=baseb, basea=basea)
 
 
-
-
-
 @app.route('/face_recognition', methods=['POST'])
 def Recognition_face():
     if request.method == "POST":
         # print('wow i get it')
         data = request.get_json()
-
         ans = he.recognition(data)
-
         return ans
+    else:
+        return "Error, pls using post"
 
-
-
-    imga = cv2.imread('static/A.png')
-    imgb = cv2.imread('static/B.png')
-    basea = cv2_strbase64(imga)
-    baseb = cv2_strbase64(imgb)
-    return render_template('my_test.html', basea=basea, baseb=baseb)
-
-
-
-
+@app.route('/upload_img', methods=['POST'])
+def upload_imgfile():
+    if request.method == "POST":
+        data = request.get_json()
+        ans = he.locate_face(data, UPLOAD_FOLDER)
+        return ans
+    else:
+        return "Error, pls using post"
 
 ##################################################################
 def base64toimg(string):

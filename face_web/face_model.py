@@ -85,6 +85,29 @@ class FaceModel:
     aligned = np.transpose(aligned, (2, 0, 1))
     return aligned, nimg, loc
 
+  def get_locate_count(self, face_img):
+    ret = self.detector.detect_face(face_img, det_type=self.det)
+    if ret is None:
+      print('ret is none')
+      return None, 0
+    bbox, points = ret
+    if bbox.shape[0] == 0:
+      print('bon len is 0')
+      return None, 0
+
+    count = len(bbox)
+    face_locate_list = []
+
+    for i, box in enumerate(bbox):
+      box = box[0:4]
+      point = points[i, :].reshape((2, 5)).T
+      nimg, bbs = face_preprocess.preprocess(face_img, box, point, image_size='112,112')
+      face_locate_list.append(bbs)
+    loc = face_img.copy()
+    for bb in face_locate_list:
+      cv2.rectangle(loc, (bb[0], bb[1]), (bb[2], bb[3]), (0, 0, 255), 2)
+    return loc, count
+
 
 
   def get_input(self, face_img):
