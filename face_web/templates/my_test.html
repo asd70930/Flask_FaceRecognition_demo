@@ -26,6 +26,10 @@ img {
 .answer{
     padding:5px 5px 5px 5px;
 }
+
+.btn_font_size{
+    font-size:20px;
+}
 </style>
 
 <section class="compare text-center">
@@ -35,11 +39,11 @@ img {
         <div class="col-md-6 d-flex flex-column">
             <div class="uploadPreview" id="faceRectDiv"></div>
             <div class="divFilePreview fileA" id="img1Preview" onclick="uploadImgA()"></div>
-            <div class="img-zone">  
+            <div class="img-zone ">
                 <img id="blsh1" src="{{ basea }}" height="300" alt="一張圖片">
             </div>
             <div class="divBtn">
-                <label class="btn btn-primary px-5 my-4">
+                <label class="btn btn-primary px-5 my-4 btn_font_size">
                     上傳圖片<input class="" hidden id="img1" type="file" accept="image/*">
                 </label>
             </div>
@@ -47,11 +51,11 @@ img {
         <div class="col-md-6 d-flex flex-column">
             <div class="uploadPreview" id="faceRectDiv2"></div>
             <div class="divFilePreview fileA" id="img2Preview" onclick="uploadImgA()"></div>
-            <div class="img-zone">  
+            <div class="img-zone ">
                 <img id="blsh2" src="{{ baseb }}" height="300"  alt="一張圖片">
             </div>
             <div class="divBtn">
-                <label class="btn btn-primary px-5 my-4">
+                <label class="btn btn-primary px-5 my-4 btn_font_size">
                     上傳圖片<input class="" hidden id="img2" type="file" accept="image/*">
                 </label>
             </div>
