@@ -9,6 +9,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField ,SubmitField
 import cv2
 import numpy as np
+from os import listdir
 import he
 
 UPLOAD_FOLDER = 'static/face_test'
@@ -70,6 +71,38 @@ def upload_imgfile():
     else:
         return "Error, pls using post"
 
+@app.route('/refresh_select', methods=['GET'])
+def refresh_select():
+    files = listdir(UPLOAD_FOLDER)
+    output = {}
+    file_list = []
+    for file in files:
+        try:
+            file_type = file.split('.')[-1]
+            if file_type == "jpg":
+                file_list.append(file)
+        except:
+            continue
+    output["files"] = file_list
+    return output
+
+@app.route('/show_img', methods=['POST'])
+def show_img():
+    if request.method == "POST":
+        data = request.get_json()
+        filename = data["filename"]
+        image = cv2.imread(UPLOAD_FOLDER+'/'+filename)
+        output_base = cv2_strbase64(image)
+        return {"base": output_base}
+    return {"base": "error"}
+
+@app.route('/recognition_allface', methods=['POST'])
+def recognition_allface():
+    if request.method == "POST":
+        data = request.get_json()
+        ans  = he.recognition_all(data)
+        return ans
+    return {"base": "error"}
 ##################################################################
 def base64toimg(string):
     """
@@ -93,6 +126,9 @@ def base64toimg(string):
             return img
     except Exception as e:
         return None
+
+
+
 
 
 def cv2_base64(image):

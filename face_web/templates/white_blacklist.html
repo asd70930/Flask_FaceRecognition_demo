@@ -4,6 +4,11 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <style>
+.img-zone-large{
+    height: 500px; /*can be anything*/
+    position: relative;
+    background-color: rgba(116, 116, 116, 0.1);
+}
 .img-zone{
     height: 250px; /*can be anything*/
     position: relative;
@@ -31,6 +36,49 @@ img {
     font-size:14px;
 }
 </style>
+<script>
+    $( document ).ready(function() {
+        // 在這撰寫javascript程式碼
+        refresh_select();
+
+    });
+    function refresh_select() {
+        var XHR = new XMLHttpRequest();
+
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == XMLHttpRequest.DONE) {
+<!--                document.getElementById("db_files").disabled=false;-->
+                var data = XHR.responseText;
+                var jsonResponse = JSON.parse(data);
+                var files = jsonResponse["files"]
+                // empty select first
+
+                $("#db_files").find("option:selected").text("");
+                $("#db_files").empty();
+
+                for (var i=0; i<files.length; ++i) {
+                    // add item in select
+                    console.log(files[i]);
+<!--                    $("#db_files").append("<option value=i>files[i]</option>");-->
+                    $("#db_files").append(`<option value=${i}>${files[i]}</option>`);
+                }
+
+
+            }
+            else{
+<!--                document.getElementById("db_files").disabled=true;-->
+            }
+        }
+
+        XHR.open('GET', 'refresh_select', true);
+        // HTTP头
+        XHR.setRequestHeader('content-type', 'application/json'); //先open再设置请求头
+        // 发送请求
+        XHR.send(JSON.stringify());
+
+    }
+
+</script>
 
 <div class="container mt-1 backgroundGray">
     <div class="row align-items-center">
@@ -42,8 +90,8 @@ img {
                     <textarea class="mb-3" id="testarea_upimgfile" rows="1"></textarea>
                 </div>
                 <div class="d-flex flex-row">
-                    <p style="font-size:12px;">選擇群組：</p>
-                    <select id="vip_group" size="1">
+                    <p style="font-size:12px;">選擇群組 ：</p>
+                    <select id="vip_group" class="ml-3" size="1">
                         <option>VIP</option>
                         <option>VVIP</option>
                         <option>黑名單</option>
@@ -59,7 +107,7 @@ img {
             <hr>
             <div class="px-5 pb-5 ">
                 <textarea class="form-control mb-3" id="textarea_getipc1" rows="1"></textarea>
-                <div class="btn btn-primary bt_font" onclick="show_camera">
+                <div class="btn btn-primary bt_font" onclick="refresh_select()">
                         開啟攝影機
                 </div>
             </div>
@@ -73,13 +121,9 @@ img {
     <hr>
     <div class="row align-items-center text-center">
         <div class="col-5 ">
-            <p style="font-size:18px;">顯示資料庫圖片</p>
-            <select class="my_select" name="cars" multiple size="10">
-                <option value="volvo">Volvo</option>
-                <option value="bmw">BMW</option>
-                <option value="saab">Saab</option>
-                <option value="benz">Benz</option>
-                <option value="audi">Audi</option>
+            <p style="font-size:18px; ">顯示資料庫圖片</p>
+            <select class="my_select" id="db_files" style="width:80%" multiple size="10">
+                <option>VIP</option>
             </select>
         </div>
         <div class="col-7">
@@ -91,12 +135,15 @@ img {
     <hr>
 
     <div class="row align-items-center">
-        <div class="col-5 ">
+        <div class="col-4 ">
             <div class="px-5 py-4">
                 <p style="font-size:18px;">開始比對</p>
-                <label class="btn btn-primary bt_font">
-                        上傳圖片<input class="" hidden id="uploadimg2" type="file" accept="image/*">
-                </label>
+                <div class="mt-3 d-flex flex-row">
+                    <label class="btn btn-primary bt_font">
+                            選擇圖片<input class="" hidden id="uploadimg2" type="file" accept="image/*">
+                    </label>
+                    <button class="btn btn-primary ml-3 bt_font" id="bt_up3" onclick="upload_img2()">上傳圖片</button>
+                </div>
             </div>
             <div class="px-5 pb-5 ">
                 <textarea class="form-control mb-3" id="textarea_getipc2" rows="1"></textarea>
@@ -105,9 +152,9 @@ img {
                 </div>
             </div>
         </div>
-        <div class="col-7 ">
-            <div class="img-zone">
-                <img id="blsh3" src="{{ baseb }}" height="200"  alt="一張圖片">
+        <div class="col-8 ">
+            <div class="img-zone-large">
+                <img id="blsh3" src="{{ baseb }}" height="450"  alt="一張圖片">
             </div>
         </div>
 
@@ -140,6 +187,28 @@ img {
     });
 
 
+
+    function readURL2(input) {
+        if (input.files && input.files[0]) {
+            if (filesizeLimit <= input.files[0].size) {
+                alert("圖片檔案無法上傳大於2MB");
+            }
+            else{
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#blsh3').attr('src', e.target.result);
+                }
+                var filename = input.files[0].name.split(".",1)[0]
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+    }
+
+    $("#uploadimg2").change(function () {
+        readURL2(this);
+    });
+
+    // upload image to server
     function upload_img1() {
         var XHR = new XMLHttpRequest();
         imgs = {};
@@ -165,6 +234,7 @@ img {
                     case 1:
                         alert("儲存圖片成功！");
                         aimg.setAttribute("src", jsonResponse["base"]);
+                        refresh_select()
                         break;
                     case 2:
                         alert("圖片中超過一個人臉！不儲存圖片！");
@@ -189,11 +259,124 @@ img {
         XHR.setRequestHeader('content-type', 'application/json'); //先open再设置请求头
         // 发送请求
         XHR.send(JSON.stringify(pay_load));
+    }
 
+
+
+    function upload_img2() {
+        var XHR = new XMLHttpRequest();
+        imgs = {};
+        var aimg = document.getElementById("blsh3");
+        var aimgsrc = aimg.getAttribute("src");
+        var process = document.getElementById("processing");
+        imgs["a"] = aimgsrc
+        var pay_load = {
+            "imgs": imgs
+        };
+
+
+        ////////////////////////////////////////////////////////////////////////////
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == XMLHttpRequest.DONE) {
+                document.getElementById("bt_up3").disabled=false;
+                var data = XHR.responseText;
+                var jsonResponse = JSON.parse(data);
+                var state = jsonResponse["state"]
+                switch (state) {
+                    case 1:
+                        alert("辨識完成！");
+                        aimg.setAttribute("src", jsonResponse["base"]);
+                        break;
+                    case 0:
+                        alert("圖片中找不到人臉！");
+
+                        break;
+                    default:
+                        alert('something error');
+                        break;
+                }
+            }
+            else{
+                document.getElementById("bt_up3").disabled=true;
+            }
+        }
+        // 配置请求
+        XHR.open('POST', 'recognition_allface', true);
+        // HTTP头
+        XHR.setRequestHeader('content-type', 'application/json'); //先open再设置请求头
+        // 发送请求
+        XHR.send(JSON.stringify(pay_load));
+    }
+
+
+
+
+    function refresh_select() {
+        var XHR = new XMLHttpRequest();
+
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == XMLHttpRequest.DONE) {
+<!--                document.getElementById("db_files").disabled=false;-->
+                var data = XHR.responseText;
+                var jsonResponse = JSON.parse(data);
+                var files = jsonResponse["files"]
+                // empty select first
+
+                $("#db_files").find("option:selected").text("");
+                $("#db_files").empty();
+
+                for (var i=0; i<files.length; ++i) {
+                    // add item in select
+<!--                    console.log(files[i]);-->
+                    $("#db_files").append(`<option value=${i}>${files[i]}</option>`);
+                }
+
+
+            }
+            else{
+<!--                document.getElementById("db_files").disabled=true;-->
+            }
+        }
+
+        XHR.open('GET', 'refresh_select', true);
+        // HTTP头
+        XHR.setRequestHeader('content-type', 'application/json'); //先open再设置请求头
+        // 发送请求
+        XHR.send(JSON.stringify());
 
     }
 
 
+    function show_selectimg() {
+        var XHR = new XMLHttpRequest();
+        var filename = $("#db_files").find("option:selected").text();
+        var pay_load = {
+            "filename": filename
+        };
+
+
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == XMLHttpRequest.DONE) {
+                var data = XHR.responseText;
+                var jsonResponse = JSON.parse(data);
+                var base = jsonResponse["base"]
+
+                var aimg = document.getElementById("blsh2");
+                aimg.setAttribute("src", base);
+            }
+        }
+        // 配置请求
+        XHR.open('POST', 'show_img', true);
+        // HTTP头
+        XHR.setRequestHeader('content-type', 'application/json'); //先open再设置请求头
+        // 发送请求
+        XHR.send(JSON.stringify(pay_load));
+
+
+    }
+    $("#db_files").change(function () {
+        show_selectimg(this);
+    });
 </script>
 
 {% endblock %}

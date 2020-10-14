@@ -1,9 +1,79 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import face_model
 import numpy as np
 import base64
 import cv2
+from os import listdir
+from os.path import join
+from PIL import Image, ImageDraw, ImageFont
+
 model = face_model.FaceModel(image_size='112,112', model='model,0')
 PREBASE64 = "data:image/jpeg;base64,"
+UPLOAD_FOLDER = 'static/face_test'
+THRESHOULD = 1.46
+
+def recognition_all(data):
+    ans = False
+    basea = data["imgs"]["a"].split(",")[1]
+    imga = base64toimg(basea)
+    inps, origin_img, locations, count = model.get_input_locs(imga)
+
+    if count == 0:
+        out_base = cv2_strbase64(imga)
+        return {"state": 0, "base": out_base}
+    else:
+        out_image = imga.copy()
+        face_encodeings = []
+        for inp in inps:
+            face_encoding = model.get_feature(inp)
+            face_encodeings.append(face_encoding)
+
+        file_names = []
+        encode_list = []
+        files = listdir(UPLOAD_FOLDER)
+        for file in files:
+            try:
+                file_type = file.split('.')[-1]
+                if file_type == "jpg":
+                    file_names.append(file.split(".")[0])
+
+                    image = cv2.imread(join(UPLOAD_FOLDER, file))
+                    inputfirst, _ = model.get_input(image)
+                    encode = model.get_feature(inputfirst)
+                    encode_list.append(encode)
+            except:
+                continue
+        known_face_encodings_copy = np.array(encode_list)
+
+        for i, face_encoding in enumerate(face_encodeings):
+            ans_name = "Unknown"
+            face_distances = np.square(np.linalg.norm(known_face_encodings_copy - face_encoding, axis=1))
+            # face_dist_arry = np.array(face_distances)
+            matches = list(face_distances <= THRESHOULD)
+            best_match_index = np.argmin(face_distances)
+            print("best distance :", face_distances[best_match_index])
+            if matches[best_match_index]:
+                ans_name = file_names[best_match_index]
+
+            # Display the results
+            bbox = locations[i]
+
+            left, top, right, bottom = bbox
+            # Draw a box around the face
+
+            cv2.rectangle(out_image, (left, top), (right, bottom), (0, 0, 255), 2)
+
+            # Draw a label with a name below the face
+            # cv2.rectangle(out_image, (left, bottom - 10), (right, bottom), (0, 0, 255), cv2.FILLED)
+            font = cv2.FONT_HERSHEY_DUPLEX
+            cv2.putText(out_image, ans_name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+
+
+
+        out_base = cv2_strbase64(out_image)
+        return {"state": 1, "base": out_base}
+
 
 def recognition(data):
     ans = False
@@ -41,7 +111,7 @@ def recognition(data):
     dist = np.sum(np.square(f1 - f2))
     # print(dist)
 
-    if dist <= 0.8:
+    if dist <= THRESHOULD:
         ans = True
     return {"state": state, "basea": out_basea, "baseb": out_baseb, "ans": ans}
 
@@ -105,3 +175,5 @@ def cv2_strbase64(image):
     base64_str = base64.b64encode(base64_str)
     output = PREBASE64+str(base64_str).split("'")[1]
     return output
+
+

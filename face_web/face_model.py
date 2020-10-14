@@ -52,7 +52,7 @@ class FaceModel:
     self.det = det
     self.threshold = threshold
     self.det_minsize = 50
-    self.det_threshold = [0.6,0.7,0.8]
+    self.det_threshold = [0.65,0.75,0.8]
     #self.det_factor = 0.9
     self.image_size = image_size
     mtcnn_path = os.path.join(os.path.dirname(__file__), 'mtcnn-model')
@@ -88,11 +88,11 @@ class FaceModel:
   def get_locate_count(self, face_img):
     ret = self.detector.detect_face(face_img, det_type=self.det)
     if ret is None:
-      print('ret is none')
+      # print('ret is none')
       return None, 0
     bbox, points = ret
     if bbox.shape[0] == 0:
-      print('bon len is 0')
+      # print('bon len is 0')
       return None, 0
 
     count = len(bbox)
@@ -107,6 +107,35 @@ class FaceModel:
     for bb in face_locate_list:
       cv2.rectangle(loc, (bb[0], bb[1]), (bb[2], bb[3]), (0, 0, 255), 2)
     return loc, count
+
+  def get_input_locs(self, face_img):
+    ret = self.detector.detect_face(face_img, det_type=self.det)
+    if ret is None:
+      # print('ret is none')
+      return None,None,None, 0
+    bbox, points = ret
+    if bbox.shape[0] == 0:
+      # print('bon len is 0')
+      return None,None,None, 0
+    count = len(bbox)
+    face_locate_list = []
+    aligneds = []
+    nimgs = []
+    for i, box in enumerate(bbox):
+      box = box[0:4]
+      point = points[i, :].reshape((2, 5)).T
+      nimg, bbs = face_preprocess.preprocess(face_img, box, point, image_size='112,112')
+      nimgs.append(nimg)
+      face_locate_list.append(bbs)
+      aligned = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
+      aligned = np.transpose(aligned, (2, 0, 1))
+      aligneds.append(aligned)
+
+    # loc = face_img.copy()
+    # for bb in face_locate_list:
+    #   cv2.rectangle(loc, (bb[0], bb[1]), (bb[2], bb[3]), (0, 0, 255), 2)
+
+    return aligneds, nimgs, face_locate_list, count
 
 
 
@@ -124,7 +153,7 @@ class FaceModel:
     nimg, _ = face_preprocess.preprocess(face_img, bbox, points, image_size='112,112')
 
     aligned = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
-    aligned = np.transpose(aligned, (2,0,1))
+    aligned = np.transpose(aligned, (2, 0, 1))
     return aligned, nimg
 
   def get_feature(self, aligned):
