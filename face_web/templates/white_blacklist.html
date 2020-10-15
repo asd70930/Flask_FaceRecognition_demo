@@ -79,7 +79,29 @@ img {
     }
 
 </script>
+<!--// modal-->
+<div class="modal fade" id="myModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <p id="ModalLongTextshow"></p>
+          <p><video id="video" src="http://192.168.68.211:8080" autoplay="autoplay" width="480" height="240"></video></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!--main body-->
 <div class="container mt-1 backgroundGray">
     <div class="row align-items-center">
         <div class="col-5 ">
@@ -107,7 +129,7 @@ img {
             <hr>
             <div class="px-5 pb-5 ">
                 <textarea class="form-control mb-3" id="textarea_getipc1" rows="1"></textarea>
-                <div class="btn btn-primary bt_font" onclick="refresh_select()">
+                <div class="btn btn-primary bt_font" data-toggle="modal" data-target="#myModalLong" id="bt_showcamera1">
                         開啟攝影機
                 </div>
             </div>
@@ -164,6 +186,12 @@ img {
 
 <script>
     var filesizeLimit = 2 * 1024 * 1024
+
+    $("#bt_showcamera1").click(function(){
+        ip = $("#textarea_getipc1").val()
+        $("#ModalLongTextshow").text(ip)
+    });
+
 
     <!-- var filesizeLimit = 1024-->
     function readURL(input) {

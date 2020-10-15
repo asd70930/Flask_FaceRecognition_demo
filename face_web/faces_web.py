@@ -10,7 +10,7 @@ from wtforms import StringField ,SubmitField
 import cv2
 import numpy as np
 from os import listdir
-import he
+# import he
 
 UPLOAD_FOLDER = 'static/face_test'
 PREBASE64 = "data:image/jpeg;base64,"
