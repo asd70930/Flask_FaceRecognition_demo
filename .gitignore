@@ -1,7 +1,5 @@
 /venv
-face_test/
-
-
-
+/face_web/static/face_test/*
+!/face_web/static/face_test/readme
 
 

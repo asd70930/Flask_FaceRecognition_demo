@@ -79,7 +79,7 @@ img {
     }
 
 </script>
-<!--// modal-->
+<!--// modal, IPC show style1 -->
 <div class="modal fade" id="myModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -90,8 +90,8 @@ img {
         </button>
       </div>
       <div class="modal-body">
-          <p id="ModalLongTextshow"></p>
-          <p><video id="video" src="http://192.168.68.211:8080" autoplay="autoplay" width="480" height="240"></video></p>
+          <p></p>
+<!--          <p><video id="video" src="http://192.168.68.211:8080" autoplay="autoplay" width="480" height="240"></video></p>-->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -100,6 +100,29 @@ img {
     </div>
   </div>
 </div>
+
+<!--// modal, IPC show style2 -->
+<div class="modal fade" id="myModalLong2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <p><img id="ipcShow2" src="{{ basea }}" width="400" height="400" alt="一張圖片"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <!--main body-->
 <div class="container mt-1 backgroundGray">
@@ -128,10 +151,12 @@ img {
             </div>
             <hr>
             <div class="px-5 pb-5 ">
-                <textarea class="form-control mb-3" id="textarea_getipc1" rows="1"></textarea>
-                <div class="btn btn-primary bt_font" data-toggle="modal" data-target="#myModalLong" id="bt_showcamera1">
+                <textarea class="form-control mb-3" id="textarea_getipc1" rows="2">rtsp://admin:admin@192.168.101.150/Media/stream2</textarea>
+                <div class="btn btn-primary bt_font" data-toggle="modal" data-target="#myModalLong" id="bt_showcamera1" >
                         開啟攝影機
                 </div>
+<!--                <div class="btn btn-primary ml-3 bt_font" data-toggle="modal" data-target="#myModalLong2" id="showIpc_way2">開啟攝影機way2</div>-->
+                <div class="btn btn-primary ml-3 bt_font" id="showIpc_way2">開啟攝影機way2</div>
             </div>
         </div>
         <div class="col-7">
@@ -168,8 +193,8 @@ img {
                 </div>
             </div>
             <div class="px-5 pb-5 ">
-                <textarea class="form-control mb-3" id="textarea_getipc2" rows="1"></textarea>
-                <div class="btn btn-primary bt_font" onclick="show_camera">
+                <textarea class="form-control mb-3" id="textarea_getipc2" rows="3" ></textarea>
+                <div class="btn btn-primary bt_font" id="show_camera2">
                         開啟攝影機
                 </div>
             </div>
@@ -186,12 +211,12 @@ img {
 
 <script>
     var filesizeLimit = 2 * 1024 * 1024
-
+    var myVar;
     $("#bt_showcamera1").click(function(){
-        ip = $("#textarea_getipc1").val()
-        $("#ModalLongTextshow").text(ip)
+        ip = $("#textarea_getipc1").val();
+        $("#ModalLongTextshow").text(ip);
+<!--        $('#ipcShow2').attr('src', e.target.result);-->
     });
-
 
     <!-- var filesizeLimit = 1024-->
     function readURL(input) {
@@ -232,6 +257,74 @@ img {
         }
     }
 
+
+    $("#show_camera2").click(function () {
+        $('#showIpc_way2').attr('disabled', "disabled");
+        ip = $("#textarea_getipc2").val();
+        var XHR = new XMLHttpRequest();
+        var pay_load = {
+            "ip": ip
+        };
+
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == XMLHttpRequest.DONE) {
+                var data = XHR.responseText;
+                var jsonResponse = JSON.parse(data);
+                var ret = jsonResponse["ret"]
+                var base = jsonResponse["base"]
+                $('#show_camera2').attr('disabled', false);
+                if (ret){
+                    $('#blsh3').attr('src', base);
+                }
+                else{alert("無法取得攝影機影像！");}
+            }
+        }
+
+
+        // 配置请求
+        XHR.open('POST', 'show_ipc', true);
+        // HTTP头
+        XHR.setRequestHeader('content-type', 'application/json'); //先open再设置请求头
+        // 发送请求
+        XHR.send(JSON.stringify(pay_load));
+    });
+
+
+    $("#showIpc_way2").click(function () {
+        $('#showIpc_way2').attr('disabled', "disabled");
+        ip = $("#textarea_getipc1").val();
+        var XHR = new XMLHttpRequest();
+        var pay_load = {
+            "ip": ip
+        };
+
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == XMLHttpRequest.DONE) {
+                var data = XHR.responseText;
+                var jsonResponse = JSON.parse(data);
+                var ret = jsonResponse["ret"]
+                var base = jsonResponse["base"]
+                $('#showIpc_way2').attr('disabled', false);
+                if (ret){
+                    $('#blsh1').attr('src', base);
+                }
+                else{alert("無法取得攝影機影像！");}
+            }
+<!--            document.getElementById("db_files").disabled=true;-->
+        }
+
+
+        // 配置请求
+        XHR.open('POST', 'show_ipc', true);
+        // HTTP头
+        XHR.setRequestHeader('content-type', 'application/json'); //先open再设置请求头
+        // 发送请求
+        XHR.send(JSON.stringify(pay_load));
+
+
+
+
+    });
     $("#uploadimg2").change(function () {
         readURL2(this);
     });

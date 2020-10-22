@@ -4,7 +4,6 @@ import mxnet as mx
 import numpy as np
 import math
 import cv2
-from multiprocessing import Pool
 from itertools import repeat
 try:
     from itertools import izip

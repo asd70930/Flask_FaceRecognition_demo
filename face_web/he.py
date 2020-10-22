@@ -6,13 +6,13 @@ import base64
 import cv2
 from os import listdir
 from os.path import join
-from PIL import Image, ImageDraw, ImageFont
 
 model = face_model.FaceModel(image_size='112,112', model='model,0')
 PREBASE64 = "data:image/jpeg;base64,"
 UPLOAD_FOLDER = 'static/face_test'
 THRESHOULD = 1.46
 
+# rtsp://admin:admin@192.168.101.150/Media/stream1
 def recognition_all(data):
     ans = False
     basea = data["imgs"]["a"].split(",")[1]
@@ -74,7 +74,6 @@ def recognition_all(data):
         out_base = cv2_strbase64(out_image)
         return {"state": 1, "base": out_base}
 
-
 def recognition(data):
     ans = False
     basea = data["imgs"]["a"].split(",")[1]
@@ -115,6 +114,17 @@ def recognition(data):
         ans = True
     return {"state": state, "basea": out_basea, "baseb": out_baseb, "ans": ans}
 
+
+def get_ipc(data):
+    ip = data["ip"]
+    cap = cv2.VideoCapture(ip)
+    ret, image = cap.read()
+    if ret:
+        out_base = cv2_strbase64(image)
+        return {"ret": ret, "base": out_base}
+    return {"ret": ret}
+
+
 def locate_face(data, filepath):
     """
 
@@ -128,7 +138,7 @@ def locate_face(data, filepath):
     imga = base64toimg(basea)
     filename = data["imgs"]["filename"]
     loc, count = model.get_locate_count(imga)
-    print("find face %i" % count)
+    # print("find face %i" % count)
     if count ==0:
         # can't find face, do not save the image
         out_base = cv2_strbase64(imga)

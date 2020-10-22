@@ -1,16 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import base64
-from flask import Flask ,render_template ,request ,session ,jsonify ,redirect ,url_for ,flash
+from flask import Flask ,render_template ,request
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
-from datetime import datetime
-from flask_wtf import FlaskForm
-from wtforms import StringField ,SubmitField
 import cv2
 import numpy as np
 from os import listdir
-# import he
+import he
+import time
 
 UPLOAD_FOLDER = 'static/face_test'
 PREBASE64 = "data:image/jpeg;base64,"
@@ -103,6 +101,15 @@ def recognition_allface():
         ans  = he.recognition_all(data)
         return ans
     return {"base": "error"}
+
+@app.route('/show_ipc', methods=['POST'])
+def showIpc():
+    if request.method == "POST":
+        data = request.get_json()
+        ans  = get_ipc(data)
+        return ans
+    return {"base": "error"}
+
 ##################################################################
 def base64toimg(string):
     """
@@ -128,11 +135,8 @@ def base64toimg(string):
         return None
 
 
-
-
-
 def cv2_base64(image):
-    base64_str = cv2.imencode('.jpg',image)[1].tostring()
+    base64_str = cv2.imencode('.jpg', image)[1].tostring()
     base64_str = base64.b64encode(base64_str)
     return base64_str
 
@@ -142,6 +146,20 @@ def cv2_strbase64(image):
     output = PREBASE64+str(base64_str).split("'")[1]
     return output
 
+
+def get_ipc(data):
+    start = time.time()
+    ip = data["ip"]
+    cap = cv2.VideoCapture(ip)
+    ret, image = cap.read()
+    if ret:
+        out_base = cv2_strbase64(image)
+        end = time.time()
+        # print("backend spend %f" % (end - start))
+        return {"ret": ret, "base": out_base}
+    end = time.time()
+    # print("backend spend %f" % (end - start))
+    return {"ret": ret}
 ##################################################################
 
 @app.errorhandler(404)
