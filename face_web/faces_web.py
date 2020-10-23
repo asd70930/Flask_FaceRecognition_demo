@@ -171,6 +171,6 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == "__main__":
-    app.run(processes=True, threaded=False, port=5000, debug=False)
+    app.run(host='0.0.0.0', processes=True, threaded=False, port=5000, debug=False)
 
 

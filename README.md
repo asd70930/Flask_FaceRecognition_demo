@@ -1,6 +1,17 @@
-# README
 
-## Pre-requirement for ubuntu 
+## Install nvidia driver, cuda, cudnn
+
+very important!!!! Can't skip this step 
+* STEP1, install Nvidia-driver
+    ```sh
+        check out Document/Nvidia GPU Driver 安裝說明.odt
+    ``` 
+* STEP2, install cuda, cudnn
+    ```sh
+        check out Document/CUDA_CUDNN安裝說明.odt
+    ``` 
+    
+## Install on Ubuntu 
 
 * STEP1, install python3.6 (can use higher as python3.7).
     ```sh
@@ -37,23 +48,65 @@
     ```sh
         deactivate
     ``` 
-## docker build for testing 
+## Or docker build for testing 
+
+* STEP1, install docker 19.03
+    ```sh
+        sudo apt-get update
+        
+        sudo apt-get install \
+            apt-transport-https \
+            ca-certificates \
+            curl \
+            gnupg-agent \
+            software-properties-common
+        
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        
+        sudo add-apt-repository \
+           "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+           $(lsb_release -cs) \
+           stable"
+           
+        sudo apt-get update
+        
+        sudo apt-get install docker-ce docker-ce-cli containerd.io
+        
+        
+        
+    ``` 
+
+* STEP2, install Nvidia Container Toolkit
+    ```sh
+        distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+        
+        curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+        
+        curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+        
+        sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+        
+        sudo systemctl restart docker
+    ```
+* STEP3, build docker image
+    ```sh
+        docker build -t face_recognition_web .
+    ```
  
- 
+* STEP4, run docker image
+    ```sh
+        docker run --gpus all --rm -it -p 5000:5000 face_recognition_web 
+    ``` 
 ## How to use
 
 Open browser Chrome or Firefox, there two page for testing 
+[check out more information](#jump)
 
 127.0.0.1:5000
 
-    Upload two iamge from user pc, and click 開始辨識 to start two person is the same or not.
     Check out the video, demo/demo1.ogv.
     It will show you how to use.  
 127.0.0.1:5000/white_black 
-  
-    This page has three part.
-    part1: Upload image to database. upload from user pc or IPC.
-    part2: Check out all image in database.
-    part3: Upload image for face recognition.
+   
     Check out the video, demo/demo2.ogv.
     It will show you how to use. 
