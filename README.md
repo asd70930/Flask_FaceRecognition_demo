@@ -100,7 +100,7 @@ very important!!!! Can't skip this step
 ## How to use
 
 Open browser Chrome or Firefox, there two page for testing 
-[check out more information](#jump)
+check out more information in face_web file.
 
 127.0.0.1:5000
 

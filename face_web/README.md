@@ -1,6 +1,6 @@
 <span id="jump"></span>
  ## How to use 
- ###first page (host:5000/)
+ ##first page (host:5000/)
 ![image](IMG/01.png)
 
 Upload image by clicking button 上傳圖片.
@@ -19,7 +19,7 @@ If image can't find face will show which image without face.
 
 
 
-### white_black page (host:5000/white_black)
+## white_black page (host:5000/white_black)
 This page has three part,
 
 part1: upload image to database

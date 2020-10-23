@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a750a0af-2bf2-4b90-b20d-691f1d77f474" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Document/CUDA_CUDNN安裝說明.odt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Document/Nvidia GPU Driver 安裝說明.odt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/01.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/02.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/03.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/04.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/05.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/06.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/07.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/IMG/08.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/face_web/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_web/faces_web.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_web/faces_web.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-    </list>
+    <list default="true" id="a750a0af-2bf2-4b90-b20d-691f1d77f474" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,19 +31,19 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="375">
-                <caret line="102" column="25" lean-forward="true" selection-start-line="102" selection-start-column="25" selection-end-line="102" selection-end-column="25" />
+              <first_editor relative-caret-position="1463">
+                <caret line="77" lean-forward="true" selection-start-line="77" selection-end-line="77" />
               </first_editor>
               <second_editor />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/face_web/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
@@ -210,11 +194,6 @@
             <path>
               <item name="web_FaceRecognition" type="b2602c69:ProjectViewProjectNode" />
               <item name="web_FaceRecognition" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="web_FaceRecognition" type="b2602c69:ProjectViewProjectNode" />
-              <item name="web_FaceRecognition" type="462c0819:PsiDirectoryNode" />
-              <item name="Document" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="web_FaceRecognition" type="b2602c69:ProjectViewProjectNode" />
@@ -659,6 +638,17 @@
     <entry file="file://$PROJECT_DIR$/face_web/IMG/06.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="1463">
+            <caret line="77" lean-forward="true" selection-start-line="77" selection-end-line="77" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/face_web/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -668,17 +658,6 @@
           <second_editor />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="375">
-            <caret line="102" column="25" lean-forward="true" selection-start-line="102" selection-start-column="25" selection-end-line="102" selection-end-column="25" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
