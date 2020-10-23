@@ -39,12 +39,17 @@ very important!!!! Can't skip this step
         source venv/bin/activate
     ```  
   
-* STEP5, activate web server.
+* STEP5, install needed lib.
+    ```sh
+        pip install -r requirements.txt
+    ```   
+
+* STEP6, activate web server.
     ```sh
         python face_web/faces_web.py 
     ``` 
     
-* STEP6, When you not using this project, depart from virtualenv.
+* STEP7, When you not using this project, depart from virtualenv.
     ```sh
         deactivate
     ``` 
